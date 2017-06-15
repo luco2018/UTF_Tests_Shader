@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 [ExecuteInEditMode]
 public class CreateCubemapArray : MonoBehaviour
@@ -25,7 +27,7 @@ public class CreateCubemapArray : MonoBehaviour
 
     void Create()
     {
-
+#if UNITY_EDITOR
         CubemapArray textureArray = new CubemapArray(6,textureList.Length, TextureFormat.RGB24, false);
         for (int i = 0; i < textureList.Length; i++)
         {
@@ -36,5 +38,6 @@ public class CreateCubemapArray : MonoBehaviour
 
         AssetDatabase.CreateAsset(textureArray, savePath);
         Debug.Log("Saved asset to " + savePath);
+#endif
     }
 }

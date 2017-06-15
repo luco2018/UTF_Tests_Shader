@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 
 [ExecuteInEditMode]
 public class TextureArray : MonoBehaviour
@@ -25,6 +27,7 @@ public class TextureArray : MonoBehaviour
 
     void Create()
     {
+#if UNITY_EDITOR
         Texture2DArray textureArray = new Texture2DArray(resolution, resolution, textureList.Length, TextureFormat.RGB24, false);
         for (int i = 0; i < textureList.Length; i++)
         {
@@ -35,5 +38,6 @@ public class TextureArray : MonoBehaviour
 
         AssetDatabase.CreateAsset(textureArray, savePath);
         Debug.Log("Saved asset to " + savePath);
+#endif
     }
 }
