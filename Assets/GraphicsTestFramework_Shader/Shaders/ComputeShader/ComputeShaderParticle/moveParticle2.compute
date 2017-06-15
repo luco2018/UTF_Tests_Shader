@@ -1,0 +1,23 @@
+#pragma kernel main
+
+// The same particle data structure used by both the compute shader and the shader.
+struct Particle
+{
+	float3 position;
+};
+
+// The buffer holding the particles shared with the regular shader.
+RWStructuredBuffer<Particle> particleBuffer;
+
+[numthreads(32,1,1)] 								// 32 is the minimal size to fullfill the wrap. this is just the number of thread to run by wrap, "x, y, z" make easy 3D indexing.
+void main (uint3 id : SV_DispatchThreadID)
+{
+	// Compute position of this particle.
+	//particleBuffer[id.x].position += normalize(particleBuffer[id.x].position) * 0.01f;
+	float particlePerRow = 200;
+	float spacingFactor = 0.5f;
+	float row = floor(id.x / particlePerRow);
+	float col = id.x - row*particlePerRow; //10 particles per row
+	particleBuffer[id.x].position.y = particleBuffer[0].position.y + row * spacingFactor;
+	particleBuffer[id.x].position.x = particleBuffer[0].position.x + col * spacingFactor;
+}
