@@ -32,6 +32,7 @@ public class ShaderInfo : MonoBehaviour
 		tm_mat = tm.GetComponent<Renderer> ().material;
 		tm_mat.renderQueue += 100;
         go.layer = 10;
+        go.tag = "InfoCam";
 		//TextMesh settings
 		tm.fontSize = 30;
         if (font != null )
@@ -58,6 +59,12 @@ public class ShaderInfo : MonoBehaviour
 		tm.text = "error";
 
         UpdateShaderInfo();
+
+        InfoTexts infotextlist = (InfoTexts) FindObjectOfType(typeof(InfoTexts));
+        if(infotextlist != null)
+        {
+            infotextlist.UpdateList();
+        }
 	}
 
     /*
