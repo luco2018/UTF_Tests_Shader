@@ -44,10 +44,10 @@ public class InfoCam : MonoBehaviour
         infocam.clearFlags = CameraClearFlags.Depth;
         infocam.depth = 1;
         infocam.cullingMask = mask;
-        infocam.allowHDR = false;
-        infocam.allowMSAA = false;
-        infocam.useOcclusionCulling = false;
-        infocam.renderingPath = RenderingPath.UsePlayerSettings;
+        infocam.allowHDR = maincam.allowHDR;
+        infocam.allowMSAA = maincam.allowMSAA;
+        infocam.useOcclusionCulling = maincam.useOcclusionCulling;
+        infocam.renderingPath = maincam.renderingPath;
 
         DestroyImmediate(camgo.GetComponent<InfoCam>());
         DestroyImmediate(camgo.GetComponent<GUILayer>());

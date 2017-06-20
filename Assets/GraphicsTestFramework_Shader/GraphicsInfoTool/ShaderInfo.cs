@@ -11,8 +11,10 @@ public class ShaderInfo : MonoBehaviour
 {
 	private Material mat;
 	private Shader shader;
+    public Font font;
 
 	private TextMesh tm;
+    private MeshRenderer mr;
 	private Material tm_mat;
 
     private GameObject go;
@@ -32,6 +34,13 @@ public class ShaderInfo : MonoBehaviour
         go.layer = 10;
 		//TextMesh settings
 		tm.fontSize = 30;
+        if (font != null )
+        {
+            tm.font = font;
+            mr = go.GetComponent<MeshRenderer>();
+            mr.material = font.material;
+            
+        }
 		tm.characterSize = 1.00f / tm.fontSize;
 		tm.anchor = TextAnchor.MiddleCenter;
 		tm.alignment = TextAlignment.Center;
