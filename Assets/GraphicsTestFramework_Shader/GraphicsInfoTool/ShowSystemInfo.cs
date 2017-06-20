@@ -173,13 +173,25 @@ public class ShowSystemInfo : MonoBehaviour
         {
             for (int i = 0; i < showHideObjects.Length; i++)
                 showHideObjects[i].SetActive(false);
-            GameObject.FindGameObjectsWithTag("InfoCam")[0].GetComponent<Camera>().enabled = false;
+            
+            InfoTexts infotextlist = (InfoTexts)FindObjectOfType(typeof(InfoTexts));
+            if (infotextlist != null)
+            {
+                Debug.Log(infotextlist.gameObject.name + " " + infotextlist.golist.Length);
+                infotextlist.ShowInfoText();
+            }
         }
         else
         {
             for (int i = 0; i < showHideObjects.Length; i++)
                 showHideObjects[i].SetActive(true);
-            GameObject.FindGameObjectsWithTag("InfoCam")[0].GetComponent<Camera>().enabled = true;
+
+            InfoTexts infotextlist = (InfoTexts)FindObjectOfType(typeof(InfoTexts));
+            if (infotextlist != null)
+            {
+                Debug.Log(infotextlist.gameObject.name + " " + infotextlist.golist.Length);
+                infotextlist.HideInfoText();
+            }
         }
     }
 

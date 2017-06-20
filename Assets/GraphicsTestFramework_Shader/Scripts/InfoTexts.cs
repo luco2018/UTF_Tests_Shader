@@ -2,24 +2,41 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[ExecuteInEditMode]
 public class InfoTexts : MonoBehaviour
 {
-    private GameObject[] golist;
+    [SerializeField]
+    public GameObject[] golist;
 
 	// Use this for initialization
 	void Start ()
     {
-
-        UpdateList();
-
+        if (Application.isPlaying)
+        {
+            UpdateList();
+            HideInfoText();
+        }
     }
-	
+
+    void Update()
+    {
+        if(!Application.isPlaying)
+        {
+            UpdateList();
+        }
+    }
+
     public void UpdateList()
     {
         golist = GameObject.FindGameObjectsWithTag("InfoCam");
+    }
 
+
+    public void HideInfoText()
+    {
         for (int i = 0; i < golist.Length; i++)
         {
+            if(golist[i].activeSelf)
             golist[i].SetActive(false);
         }
     }
@@ -28,7 +45,8 @@ public class InfoTexts : MonoBehaviour
     {
         for (int i = 0; i < golist.Length; i++)
         {
-            golist[i].SetActive(true);
+            if (!golist[i].activeSelf)
+                golist[i].SetActive(true);
         }
     }
 }

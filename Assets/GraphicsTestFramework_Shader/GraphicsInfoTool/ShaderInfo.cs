@@ -7,6 +7,7 @@ using UnityEngine;
     using UnityEditor;
 #endif
 
+[ExecuteInEditMode]
 public class ShaderInfo : MonoBehaviour 
 {
 	private Material mat;
@@ -17,55 +18,59 @@ public class ShaderInfo : MonoBehaviour
     private MeshRenderer mr;
 	private Material tm_mat;
 
+    [SerializeField]
     private GameObject go;
 
-	void Start ()
+	void Awake ()
 	{
         mat = GetComponent<Renderer> ().sharedMaterial;
 		shader = mat.shader;
 
-		//Setup the TextMesh object
-		go = new GameObject ();
-		tm = new TextMesh ();
-		go.AddComponent (tm.GetType ());
-		tm = go.GetComponent<TextMesh> ();
-		tm_mat = tm.GetComponent<Renderer> ().material;
-		tm_mat.renderQueue += 100;
-        go.layer = 10;
-        go.tag = "InfoCam";
-		//TextMesh settings
-		tm.fontSize = 30;
-        if (font != null )
-        {
-            tm.font = font;
-            mr = go.GetComponent<MeshRenderer>();
-            mr.material = font.material;
+        if(go == null || Application.isPlaying)
+        { 
+            if(go != null)
+            {
+                DestroyImmediate(go);
+            }
+            //Setup the TextMesh object
+		    go = new GameObject ();
+		    tm = new TextMesh ();
+		    go.AddComponent (tm.GetType ());
+		    tm = go.GetComponent<TextMesh> ();
+		    tm_mat = tm.GetComponent<Renderer> ().material;
+		    tm_mat.renderQueue += 100;
+            go.layer = 10;
+            go.tag = "InfoCam";
+            go.name = "ShaderInfo";
+		    //TextMesh settings
+		    tm.fontSize = 30;
+            if (font != null )
+            {
+                tm.font = font;
+                mr = go.GetComponent<MeshRenderer>();
+                mr.material = font.material;
             
-        }
-		tm.characterSize = 1.00f / tm.fontSize;
-		tm.anchor = TextAnchor.MiddleCenter;
-		tm.alignment = TextAlignment.Center;
-		//TextMesh Position
-		Vector3 thisscreenpos = Camera.main.WorldToScreenPoint (this.transform.position);
-		go.transform.position = Camera.main.ScreenToWorldPoint(thisscreenpos);
-		go.transform.LookAt (Camera.main.transform);
-		float distance = Mathf.Abs(Vector3.Distance (go.transform.position, Camera.main.transform.position));
-		distance /= 5.0f;
-		go.transform.localScale = new Vector3 (
-			-1 * go.transform.localScale.x * distance,
-			go.transform.localScale.y * distance,
-			go.transform.localScale.z * distance);
-		//Initial TextMesh Value
-		tm.text = "error";
+            }
+		    tm.characterSize = 1.00f / tm.fontSize;
+		    tm.anchor = TextAnchor.MiddleCenter;
+		    tm.alignment = TextAlignment.Center;
+		    //TextMesh Position
+		    Vector3 thisscreenpos = Camera.main.WorldToScreenPoint (this.transform.position);
+		    go.transform.position = Camera.main.ScreenToWorldPoint(thisscreenpos);
+		    go.transform.LookAt (Camera.main.transform);
+		    float distance = Mathf.Abs(Vector3.Distance (go.transform.position, Camera.main.transform.position));
+		    distance /= 5.0f;
+		    go.transform.localScale = new Vector3 (
+			    -1 * go.transform.localScale.x * distance,
+			    go.transform.localScale.y * distance,
+			    go.transform.localScale.z * distance);
+		    //Initial TextMesh Value
+		    tm.text = "error";
 
-        UpdateShaderInfo();
-
-        InfoTexts infotextlist = (InfoTexts) FindObjectOfType(typeof(InfoTexts));
-        if(infotextlist != null)
-        {
-            infotextlist.UpdateList();
+            UpdateShaderInfo();
         }
-	}
+
+    }
 
     /*
     void OnGUI()
