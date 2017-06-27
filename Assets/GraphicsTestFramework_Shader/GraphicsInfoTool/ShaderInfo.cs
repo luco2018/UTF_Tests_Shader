@@ -37,7 +37,7 @@ public class ShaderInfo : MonoBehaviour
 		    tm = new TextMesh ();
 		    go.AddComponent (tm.GetType ());
 		    tm = go.GetComponent<TextMesh> ();
-		    tm_mat = tm.GetComponent<Renderer> ().material;
+		    tm_mat = tm.GetComponent<Renderer> ().sharedMaterial;
 		    tm_mat.renderQueue += 100;
             go.layer = 10;
             go.tag = "InfoCam";
