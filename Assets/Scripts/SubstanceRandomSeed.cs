@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class SubstanceRandomSeed : MonoBehaviour
 {
+    public bool rebuild = true;
 #if !UNITY_WEBGL
     private ProceduralMaterial subMat;
 
@@ -12,6 +13,7 @@ public class SubstanceRandomSeed : MonoBehaviour
 	{
 		subMat = GetComponent<MeshRenderer> ().material as ProceduralMaterial;
         //InvokeRepeating ("RandomSeed", 1f, 1f);
+        if(rebuild)
         RandomSeed();
 
     }
