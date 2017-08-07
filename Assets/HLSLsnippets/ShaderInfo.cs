@@ -21,13 +21,13 @@ public class ShaderInfo : MonoBehaviour
     //[SerializeField]
     private GameObject go;
 
-	void Awake ()
+	void Start ()
 	{
         mat = GetComponent<Renderer> ().sharedMaterial;
 		shader = mat.shader;
 
-        if(go == null || Application.isPlaying)
-        { 
+        //if(go == null || Application.isPlaying)
+       // { 
             if(go != null)
             {
                 DestroyImmediate(go);
@@ -68,7 +68,7 @@ public class ShaderInfo : MonoBehaviour
 		    tm.text = "error";
 
             UpdateShaderInfo();
-        }
+      //  }
 
     }
 
