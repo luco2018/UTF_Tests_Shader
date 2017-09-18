@@ -96,7 +96,11 @@
 #endif
 
 #ifdef SHOW_Z
+		#if SHADER_API_GLCORE || SHADER_API_GLES || SHADER_API_GLES3
+		return 1-col.b;
+		#else
 		return col.b;
+		#endif
 #endif
 
 	}
