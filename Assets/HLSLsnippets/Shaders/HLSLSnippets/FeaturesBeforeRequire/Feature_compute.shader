@@ -58,9 +58,9 @@
 		float power = 1 - clamp(dist / _EmissionDistance, 0.0f, 1.0f);
 		o.emissionPower += power;
 
-		dist = abs(distance(myObjectBuffer[1].objPosition, wvertex.xyz));
-		power = 1 - clamp(dist / _EmissionDistance, 0.0f, 1.0f);
-		o.emissionPower += power;
+		//dist = abs(distance(myObjectBuffer[1].objPosition, wvertex.xyz));
+		//power = 1 - clamp(dist / _EmissionDistance, 0.0f, 1.0f);
+		//o.emissionPower += power;
 		#endif
 	}
 

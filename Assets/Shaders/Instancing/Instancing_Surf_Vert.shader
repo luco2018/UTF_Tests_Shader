@@ -38,7 +38,7 @@
 
 	          UNITY_SETUP_INSTANCE_ID (v);
 
-	          v.vertex.xyz += v.normal * UNITY_ACCESS_INSTANCED_PROP(_Amount);
+	          v.vertex.xyz += v.normal * UNITY_ACCESS_INSTANCED_PROP(_Amount) * 0.5f;
 	     }
 
 		void surf (Input IN, inout SurfaceOutputStandard o) 

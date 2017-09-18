@@ -89,7 +89,7 @@ Shader "FTPCustom/Instancing/Unlit mixed"
 			fixed4 col = tex2D(_MainTex, i.uv);
 			col.r *= UNITY_ACCESS_INSTANCED_PROP(_Fixed2).r;
 			col.g *= UNITY_ACCESS_INSTANCED_PROP(_Float3).g;
-			col.b *= h44[2][3];
+			col.b *= h44[2][2];
 			col.a *= 1;
 			
 				return col;

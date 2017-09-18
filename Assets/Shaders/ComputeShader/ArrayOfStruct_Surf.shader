@@ -16,7 +16,7 @@
 		
 		CGPROGRAM
 		#pragma surface surf Standard fullforwardshadows vertex:vert
-		//#pragma target 3.0
+		#pragma target 4.5
 
 		sampler2D _MainTex;
 

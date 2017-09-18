@@ -34,7 +34,7 @@
 
 			#if SHADER_API_D3D11
 				Texture2D _MainTex;
-				SamplerState my_point_clamp_sampler;
+				SamplerState my_point_repeat_sampler;
 			#endif
 
 			v2f vert (appdata v)
@@ -51,7 +51,7 @@
 
 
 				#if SHADER_API_D3D11
-					col = _MainTex.Sample(my_point_clamp_sampler, i.uv);
+					col = _MainTex.Sample(my_point_repeat_sampler, i.uv);
 				#endif
 
 

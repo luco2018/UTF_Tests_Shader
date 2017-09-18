@@ -10,7 +10,8 @@ public class ColourCycleStatic : MonoBehaviour
 	private Material mat;
 	private MeshRenderer mr;
 	public string property = "_Color";
-	//private Color curCol = Color.white;
+    //private Color curCol = Color.white;
+    [ColorUsageAttribute(true, true, 0f, 8f, 0.125f, 3f)]
     public Color color;
 
 	// Use this for initialization

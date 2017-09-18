@@ -20,7 +20,7 @@
         
         CGPROGRAM
         #pragma surface surf BlinnPhong addshadow fullforwardshadows vertex:disp tessellate:tessEdge tessphong:_Phong nolightmap
-        //#pragma target 4.6
+        #pragma target 4.6
         #include "Tessellation.cginc"
 
         struct appdata {

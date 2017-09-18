@@ -38,7 +38,27 @@ public class Instancing : MonoBehaviour
 
 	private Color InstanceColor(int id)
 	{
-		return HSBColor.ToColor (new HSBColor ( (float)id / (float)renderers.Length, 1, 1));
+        Color result;
+        switch(id)
+        {
+            case 0:
+                result = new Color(1, 0, 0, 1); //Red
+                break;
+            case 1:
+                result = new Color(0, 1, 0, 1); //Yellow
+                break;
+            case 2:
+                result = new Color(0, 0, 1, 1); //Green
+                break;
+            case 3:
+                result = new Color(0.5f, 0.5f, 0.5f, 1); //Grey
+                break;
+            default:
+                result = new Color(1, 1, 1, 1); //White
+                break;
+        }
+        return result;
+		//return HSBColor.ToColor (new HSBColor ( (float)id / (float)renderers.Length, 1, 1));
 	}
 
 	private float InstanceFloat(int id)

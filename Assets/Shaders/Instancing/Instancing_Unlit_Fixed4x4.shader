@@ -88,9 +88,9 @@ Shader "FTPCustom/Instancing/Unlit fixed4x4"
 
 				fixed4x4 f44 = UNITY_ACCESS_INSTANCED_PROP(_Fixed4x4);
 
-				col.r = col.r * f44[0][1];
-				col.g = col.g * f44[1][2];
-				col.b = col.b * f44[2][3];
+				col.r = col.r * f44[0][0];
+				col.g = col.g * f44[1][1];
+				col.b = col.b * f44[2][2];
 			
 				return col;
 			}

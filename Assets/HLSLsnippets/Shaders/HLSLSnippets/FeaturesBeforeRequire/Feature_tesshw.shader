@@ -14,9 +14,9 @@ Shader "FTPCustom/HLSLSnippets/FeatureBeforeRequire/tesshw"
 		LOD 300
 
 		CGPROGRAM
-#pragma target 4.6
-#pragma surface surf BlinnPhong vertex:dispNone tessellate:tessEdge tessphong:_Phong nolightmap addshadow fullforwardshadows 
-#include "Tessellation.cginc"
+	#pragma target 4.6
+	#pragma surface surf BlinnPhong vertex:dispNone tessellate:tessEdge tessphong:_Phong nolightmap addshadow fullforwardshadows 
+	#include "Tessellation.cginc"
 
 		struct appdata
 	{

@@ -16,6 +16,7 @@ SubShader {
 	
 CGPROGRAM
 #pragma surface surf BlinnPhong addshadow vertex:disp tessellate:tessEdge tessphong:_Smoothness
+#pragma target 4.6
 #include "Tessellation.cginc"
 
 struct appdata {

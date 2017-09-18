@@ -17,7 +17,7 @@
         
         CGPROGRAM
         #pragma surface surf BlinnPhong addshadow fullforwardshadows vertex:disp tessellate:tessFixed nolightmap
-        //#pragma target 4.6
+        #pragma target 4.6
 
         struct appdata {
             float4 vertex : POSITION;

@@ -16,7 +16,6 @@
         
         CGPROGRAM
         #pragma surface surf BlinnPhong addshadow fullforwardshadows vertex:disp nolightmap
-        //#pragma target 4.6
 
         struct appdata 
         {
