@@ -29,6 +29,7 @@ Shader "FTPCustom/HLSLSnippets/FeatureBeforeRequire/framebufferfetch"
 
 			#pragma vertex ComputeVertex
 			#pragma fragment ComputeFragment
+			#pragma only_renderers metal
 			//#pragma require framebufferfetch
 
 			sampler2D _MainTex;

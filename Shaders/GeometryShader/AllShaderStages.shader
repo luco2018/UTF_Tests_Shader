@@ -1,17 +1,13 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-Shader "FTPCustom/ShaderStages/All" 
+﻿Shader "FTPCustom/ShaderStages/All" 
 {
     Properties 
 	{
 		[Header(VertexDisplace)]
 		_VDist("Vert Distplace", Range(0,1)) = 0.1
 
-		[Header(Wireframe)]
-		_LineColor("LineColor", Color) = (1,1,1,1)
+		[Header(Color)]
 		_FillColor("FillColor", Color) = (0,0,0,0)
         _TessEdge ("Edge Tess", Range(1,64)) = 2
-		_WireThickness("Wire Thickness", RANGE(0, 800)) = 100
 
 		[Header(Extra)]
 		[IntRange] _Steps("_Steps", Range(1,10)) = 1
@@ -39,8 +35,6 @@ Shader "FTPCustom/ShaderStages/All"
     		//#include "UnityCG.cginc"
 			float _VDist;
     		float _TessEdge;
-			float _WireThickness;
-			uniform fixed4 _LineColor;
 			uniform fixed4 _FillColor;
 			//Extra
 			float _Length;
@@ -82,7 +76,7 @@ Shader "FTPCustom/ShaderStages/All"
 			struct GS_Out
 			{
 				float4 pos   : SV_Position;
-				float4 dist : TEXCOORD1;
+				float4 color : COLOR;
 			};
 
     		struct FS_Out
@@ -148,27 +142,17 @@ Shader "FTPCustom/ShaderStages/All"
 				float2 p1 = i[1].pos.xy / i[1].pos.w;
 				float2 p2 = i[2].pos.xy / i[2].pos.w;
 
-				float2 edge0 = p2 - p1;
-				float2 edge1 = p2 - p0;
-				float2 edge2 = p1 - p0;
-
-				float area = abs(edge1.x * edge2.y - edge1.y * edge2.x);
-				float thickness = 800 - _WireThickness;
-
 				GS_Out o;
 				o.pos = i[0].pos;
-				o.dist.xyz = float3((area / length(edge0)), 0.0, 0.0) * o.pos.w * thickness;
-				o.dist.w = 1.0 / o.pos.w;
+				o.color = o.pos;
 				triangleStream.Append(o);
 
 				o.pos = i[1].pos;
-				o.dist.xyz = float3(0.0, (area / length(edge1)), 0.0) * o.pos.w * thickness;
-				o.dist.w = 1.0 / o.pos.w;
+				o.color = o.pos;
 				triangleStream.Append(o);
 
 				o.pos = i[2].pos;
-				o.dist.xyz = float3(0.0, 0.0, (area / length(edge2))) * o.pos.w * thickness;
-				o.dist.w = 1.0 / o.pos.w;
+				o.color = o.pos;
 				triangleStream.Append(o);
 
 				//=========================================Extra
@@ -200,30 +184,26 @@ Shader "FTPCustom/ShaderStages/All"
 
 					o.pos = PP0 - W0;
 					o.pos += P; //position it to the polygon center
+					o.color = o.pos;
 					o.pos = UnityObjectToClipPos(float4(o.pos.xyz, 1.0));
-					o.dist.xyz = float3((area / length(edge0)), 0.0, 0.0) * o.pos.w * thickness;
-					o.dist.w = 1.0 / o.pos.w;
 					triangleStream.Append(o);
 
 					o.pos = PP0 + W0;
 					o.pos += P;
+					o.color = o.pos;
 					o.pos = UnityObjectToClipPos(float4(o.pos.xyz, 1.0));
-					o.dist.xyz = float3(0.0, (area / length(edge1)), 0.0) * o.pos.w * thickness;
-					o.dist.w = 1.0 / o.pos.w;
 					triangleStream.Append(o);
 
 					o.pos = PP1 - W1;
 					o.pos += P;
+					o.color = o.pos;
 					o.pos = UnityObjectToClipPos(float4(o.pos.xyz, 1.0));
-					o.dist.xyz = float3(0.0, 0.0, (area / length(edge2))) * o.pos.w * thickness;
-					o.dist.w = 1.0 / o.pos.w;
 					triangleStream.Append(o);
 
 					o.pos = PP1 + W1;
 					o.pos += P;
+					o.color = o.pos;
 					o.pos = UnityObjectToClipPos(float4(o.pos.xyz, 1.0));
-					o.dist.xyz = float3((area / length(edge0)), 0.0, 0.0) * o.pos.w * thickness;
-					o.dist.w = 1.0 / o.pos.w;
 					triangleStream.Append(o);
 				}
 			}
@@ -232,15 +212,8 @@ Shader "FTPCustom/ShaderStages/All"
     		{
         		FS_Out o;
 
-				float minDistanceToEdge = min(i.dist[0], min(i.dist[1], i.dist[2])) * i.dist[3];
-				if(minDistanceToEdge > 0.9)
-                {
-					o.color = _FillColor;
-                }
-				else
-				{
-					o.color = _LineColor;
-				}
+				o.color = _FillColor * i.color;
+ 
        			return o;
     		}
      
