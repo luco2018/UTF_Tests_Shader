@@ -35,7 +35,7 @@
 			float4 _MainTex_ST;
 
 			#if SHADER_API_D3D11
-				TextureCubeMap _MainTex;
+				TextureCube _MainTex;
 				SamplerState my_point_repeat_sampler;
 			#endif
 
