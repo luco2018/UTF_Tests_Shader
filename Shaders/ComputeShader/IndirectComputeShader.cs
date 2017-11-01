@@ -1,66 +1,109 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class IndirectComputeShader : MonoBehaviour 
 {
-	private ComputeBuffer cbDrawArgs;
-	public ComputeShader shader;
-	public int argsSize = 12;
+    public ComputeShader shader;
+    public TextMesh tx;
+    public int _amount = 3; //max no. of data that you want to handle
+    public float _filter = 0f; //just to make the filter to give different result in each frame
+    public bool staticTest = false;
 
-	private int _kernel;
-	private Material _mat;
+    private ComputeBuffer cbDrawArgs;
+    private int[] args;
+    private ComputeBuffer cbPoints;
+    private int _kernelIndirect;
+    private int _kernelDirect;
+    private uint _threadsizeX = 0;
+    private uint _threadsizeY = 0;
+    private uint _threadsizeZ = 0;
 
-	void Start () 
+    void Start () 
 	{
-		if (cbDrawArgs == null)
-		{
-			cbDrawArgs = new ComputeBuffer (1, argsSize, ComputeBufferType.IndirectArguments);
-			var args = new int[3];
-			args[0] = 512/8;
-			args[1] = 512/8;
-			args[2] = 1;
-			cbDrawArgs.SetData (args);
-		}
+        release(); //just to make sure the buffer are clean
 
-		_kernel = shader.FindKernel ("CSMainIndirect");
-		_mat = GetComponent<Renderer> ().material;
-		RunShader ();
-	}
-		
-	public void RunShader()
-	{
-		RenderTexture tex = new RenderTexture (512, 512, 24);
-		tex.enableRandomWrite = true;
-		tex.Create ();
+        _kernelDirect = shader.FindKernel("CSMainDirect");
+        _kernelIndirect = shader.FindKernel("CSMainIndirect");
 
-		shader.SetTexture (_kernel, "ResultIndirect", tex);
-		//shader.Dispatch (_kernel, 512 / 8, 512 / 8, 1);
-		shader.DispatchIndirect(_kernel,cbDrawArgs,0);
+        shader.GetKernelThreadGroupSizes(_kernelIndirect, out _threadsizeX, out _threadsizeY, out _threadsizeZ);
 
-		_mat.SetTexture ("_MainTex", tex);
+        if (cbDrawArgs == null)
+        {
+            cbDrawArgs = new ComputeBuffer(1, 16, ComputeBufferType.IndirectArguments);
+            args = new int[4];
+            args[0] = (int)_threadsizeX;
+            args[1] = (int)_threadsizeY;
+            args[2] = (int)_threadsizeZ;
+            args[3] = 0;
+            cbDrawArgs.SetData(args);
+        }
 
-	}
+        if (cbPoints == null)
+        {
+            cbPoints = new ComputeBuffer(_amount, 4, ComputeBufferType.Append); //because 1*uint
+        }
+    }
 
+    private void Update()
+    {
+        //Make filter change, so that we see different result
+        if (!staticTest) { if (_filter >= _amount) { _filter = 0; } else { _filter++; } }
+
+        //Reset count
+        cbPoints.SetCounterValue(0);
+
+        //Direct dispatch to do filter
+        shader.SetFloat("_Filter", _filter);
+        shader.SetBuffer(_kernelDirect, "pointBufferOutput", cbPoints);
+        shader.Dispatch(_kernelDirect, _amount * (int)_threadsizeX, (int)_threadsizeY, (int)_threadsizeZ);
+
+        //Copy Count
+        ComputeBuffer.CopyCount(cbPoints, cbDrawArgs, 0);
+
+        //Indirect dispatch to only execute kernel on filtered data
+        shader.SetBuffer(_kernelIndirect, "pointBuffer", cbPoints);
+        shader.DispatchIndirect(_kernelIndirect, cbDrawArgs, 0);
+
+        //Read data from GPU
+        int[] ff = new int[cbPoints.count];
+        cbPoints.GetData(ff);
+        int[] aa = new int[args.Length];
+        cbDrawArgs.GetData(aa);
+
+        //Output
+        tx.text = "Indirect \n cbDrawArgs = [0]:" + aa[0] + " [1]:" + aa[1] + " [2]:" + aa[2] + " [3]:" + aa[3] + " \n cbPoints = " + cbPoints.count;
+        for (int i = 0; i < ff.Length; i++)
+        {
+            tx.text += "\n" + "ff[" + i + "] = " + ff[i];
+        }
+    }
+
+    //------------------------------------------------------------------------------
+
+    private void release()
+    {
+        if (cbDrawArgs != null)
+        {
+            cbDrawArgs.Dispose();
+            cbDrawArgs.Release();
+            cbDrawArgs = null;
+            Debug.Log("OnDestroy - Release cbDrawArgs compute buffer");
+        }
+        if (cbPoints != null)
+        {
+            cbPoints.Dispose();
+            cbPoints.Release();
+            cbPoints = null;
+            Debug.Log("OnDestroy - Release cbPoints compute buffer");
+        }
+    }
 	void OnDestroy()
 	{
-		if (cbDrawArgs != null) 
-		{
-			cbDrawArgs.Release (); 
-			cbDrawArgs = null;
-			Debug.Log ("OnDestroy - Release args compute buffer");
-		}
-
-	}
+        release();
+    }
 
 	void OnApplicationQuit()
 	{
-		if (cbDrawArgs != null) 
-		{
-			cbDrawArgs.Release (); 
-			cbDrawArgs = null;
-			Debug.Log ("OnApplicationQuit - Release args compute buffer");
-		}
-	}
+        release();
+    }
 
 }
