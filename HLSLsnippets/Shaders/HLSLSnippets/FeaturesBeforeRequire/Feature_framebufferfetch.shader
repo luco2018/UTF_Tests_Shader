@@ -69,7 +69,7 @@ Shader "FTPCustom/HLSLSnippets/FeatureBeforeRequire/framebufferfetch"
 
 			fixed4 ComputeFragment(VertexOutput vertexOutput
 			//#ifdef UNITY_FRAMEBUFFER_FETCH_AVAILABLE
-				, inout fixed4 fetchColor : COLOR0
+				, inout fixed4 fetchColor : COLOR1
 			//#endif
 			) : SV_Target
 			{
