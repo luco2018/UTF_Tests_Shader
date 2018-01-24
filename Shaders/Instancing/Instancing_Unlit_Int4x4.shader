@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
+﻿// Upgrade NOTE: upgraded instancing buffer 'MyProperties' to new syntax.
+
+// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
 
 Shader "FTPCustom/Instancing/Unlit int4x4"
 {
@@ -39,7 +41,7 @@ Shader "FTPCustom/Instancing/Unlit int4x4"
 			float4 _MainTex_ST;
 
 			//D3D 64KB * 500 Objects OPENGL 16KB * 125 Objects
-			UNITY_INSTANCING_CBUFFER_START (MyProperties)
+			UNITY_INSTANCING_BUFFER_START (MyProperties)
 
 			//UNITY_DEFINE_INSTANCED_PROP(fixed, _Fixed)
 			//UNITY_DEFINE_INSTANCED_PROP(fixed2, _Fixed2)
@@ -64,9 +66,10 @@ Shader "FTPCustom/Instancing/Unlit int4x4"
 			//UNITY_DEFINE_INSTANCED_PROP(int3, _Int3)
 			//UNITY_DEFINE_INSTANCED_PROP(int4, _Int4)
 			UNITY_DEFINE_INSTANCED_PROP(int4x4, _Int4x4)
+#define _Int4x4_arr MyProperties
 
             //UNITY_DEFINE_INSTANCED_PROP (float4, _Color)
-            UNITY_INSTANCING_CBUFFER_END
+            UNITY_INSTANCING_BUFFER_END(MyProperties)
 			
 			v2f vert (appdata v)
 			{
@@ -86,7 +89,7 @@ Shader "FTPCustom/Instancing/Unlit int4x4"
 
 				fixed4 col = tex2D(_MainTex, i.uv);
 
-				int4x4 f44 = UNITY_ACCESS_INSTANCED_PROP(_Int4x4);
+				int4x4 f44 = UNITY_ACCESS_INSTANCED_PROP(_Int4x4_arr, _Int4x4);
 
 				col.r = col.r * f44[0][1];
 				col.g = col.g * f44[1][2];

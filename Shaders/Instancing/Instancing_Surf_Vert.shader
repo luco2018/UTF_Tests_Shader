@@ -1,4 +1,6 @@
-﻿Shader "FTPCustom/Instancing/Surface with Vertex"
+﻿// Upgrade NOTE: upgraded instancing buffer 'Props' to new syntax.
+
+Shader "FTPCustom/Instancing/Surface with Vertex"
 {
 	Properties 
 	{
@@ -28,9 +30,10 @@
 		half _Metallic;
 
 		//D3D 64KB * 500 Objects OPENGL 16KB * 125 Objects
-		UNITY_INSTANCING_CBUFFER_START(Props)
+		UNITY_INSTANCING_BUFFER_START(Props)
 		UNITY_DEFINE_INSTANCED_PROP(float, _Amount)
-		UNITY_INSTANCING_CBUFFER_END
+#define _Amount_arr Props
+		UNITY_INSTANCING_BUFFER_END(Props)
 
 	     void vert (inout appdata_full v, out Input o) 
 	     {
@@ -38,7 +41,7 @@
 
 	          UNITY_SETUP_INSTANCE_ID (v);
 
-	          v.vertex.xyz += v.normal * UNITY_ACCESS_INSTANCED_PROP(_Amount) * 0.5f;
+	          v.vertex.xyz += v.normal * UNITY_ACCESS_INSTANCED_PROP(_Amount_arr, _Amount) * 0.5f;
 	     }
 
 		void surf (Input IN, inout SurfaceOutputStandard o) 

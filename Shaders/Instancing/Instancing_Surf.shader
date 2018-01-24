@@ -1,4 +1,6 @@
-﻿Shader "FTPCustom/Instancing/Surface"
+﻿// Upgrade NOTE: upgraded instancing buffer 'Props' to new syntax.
+
+Shader "FTPCustom/Instancing/Surface"
 {
 	Properties 
 	{
@@ -28,13 +30,14 @@
 		half _Metallic;
 
 		//D3D 64KB * 500 Objects OPENGL 16KB * 125 Objects
-		UNITY_INSTANCING_CBUFFER_START(Props)
+		UNITY_INSTANCING_BUFFER_START(Props)
 		UNITY_DEFINE_INSTANCED_PROP(fixed4, _Color)
-		UNITY_INSTANCING_CBUFFER_END
+#define _Color_arr Props
+		UNITY_INSTANCING_BUFFER_END(Props)
 
 		void surf (Input IN, inout SurfaceOutputStandard o) 
 		{
-			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * UNITY_ACCESS_INSTANCED_PROP(_Color);
+			fixed4 c = tex2D (_MainTex, IN.uv_MainTex) * UNITY_ACCESS_INSTANCED_PROP(_Color_arr, _Color);
 
 			o.Albedo = c.rgb;
 			o.Metallic = _Metallic;

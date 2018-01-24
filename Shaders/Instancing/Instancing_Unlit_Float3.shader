@@ -1,4 +1,6 @@
-﻿// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
+﻿// Upgrade NOTE: upgraded instancing buffer 'MyProperties' to new syntax.
+
+// Upgrade NOTE: replaced 'UNITY_INSTANCE_ID' with 'UNITY_VERTEX_INPUT_INSTANCE_ID'
 
 Shader "FTPCustom/Instancing/Unlit float3"
 {
@@ -39,7 +41,7 @@ Shader "FTPCustom/Instancing/Unlit float3"
 			float4 _MainTex_ST;
 
 			//D3D 64KB * 500 Objects OPENGL 16KB * 125 Objects
-			UNITY_INSTANCING_CBUFFER_START (MyProperties)
+			UNITY_INSTANCING_BUFFER_START (MyProperties)
 
 			//UNITY_DEFINE_INSTANCED_PROP(fixed, _Fixed)
 			//UNITY_DEFINE_INSTANCED_PROP(fixed2, _Fixed2)
@@ -56,6 +58,7 @@ Shader "FTPCustom/Instancing/Unlit float3"
 			//UNITY_DEFINE_INSTANCED_PROP(float, _Float)
 			//UNITY_DEFINE_INSTANCED_PROP(float2, _Float2)
 			UNITY_DEFINE_INSTANCED_PROP(float3, _Float3)
+#define _Float3_arr MyProperties
 			//UNITY_DEFINE_INSTANCED_PROP(float4, _Float4)
 			//UNITY_DEFINE_INSTANCED_PROP(float4x4, _Float4x4)
 
@@ -66,7 +69,7 @@ Shader "FTPCustom/Instancing/Unlit float3"
 			//UNITY_DEFINE_INSTANCED_PROP(int4x4, _Int4x4)
 
             //UNITY_DEFINE_INSTANCED_PROP (float4, _Color)
-            UNITY_INSTANCING_CBUFFER_END
+            UNITY_INSTANCING_BUFFER_END(MyProperties)
 			
 			v2f vert (appdata v)
 			{
@@ -85,7 +88,7 @@ Shader "FTPCustom/Instancing/Unlit float3"
 				UNITY_SETUP_INSTANCE_ID (i); //optional for frag
 
 			fixed4 col = tex2D(_MainTex, i.uv);
-			col.rgb *= UNITY_ACCESS_INSTANCED_PROP(_Float3);
+			col.rgb *= UNITY_ACCESS_INSTANCED_PROP(_Float3_arr, _Float3);
 			
 				return col;
 			}
