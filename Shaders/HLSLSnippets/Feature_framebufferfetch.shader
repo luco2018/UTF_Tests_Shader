@@ -1,25 +1,16 @@
-﻿// Upgrade NOTE: replaced 'mul(UNITY_MATRIX_MVP,*)' with 'UnityObjectToClipPos(*)'
-
-//https://github.com/Elringus/BlendModeExample/blob/master/Assets/Shaders/FramebufferDarken.shader
-//http://elringus.me/blend-modes-in-unity/
+﻿//https://gist.github.com/aras-p/ca86e6dddc46def4d1a8
 
 Shader "FTPCustom/HLSLSnippets/FeatureBeforeRequire/framebufferfetch"
 {
 	Properties
 	{
-		_MainTex("Sprite Texture", 2D) = "white" {}
-		_Color("Tint", Color) = (1,1,1,1)
 	}
 
 	SubShader
 	{
-		Tags
-		{
-			"Queue" = "Transparent"
-			"RenderType" = "Transparent"
-		}
-
-		Blend SrcAlpha OneMinusSrcAlpha
+		Tags { "RenderType"="Transparent" "Queue"="Transparent"}
+		LOD 100
+		ZWrite Off
 
 		Pass
 		{
@@ -27,63 +18,32 @@ Shader "FTPCustom/HLSLSnippets/FeatureBeforeRequire/framebufferfetch"
 
 			#include "UnityCG.cginc"
 
-			#pragma vertex ComputeVertex
-			#pragma fragment ComputeFragment
-			#pragma only_renderers metal
-			//#pragma require framebufferfetch
+			#pragma vertex vert
+			#pragma fragment frag
+			
 
-			sampler2D _MainTex;
-			fixed4 _Color;
-
-			struct VertexInput
+			struct appdata_t 
 			{
 				float4 vertex : POSITION;
-				float4 color : COLOR;
 				float2 texcoord : TEXCOORD0;
 			};
 
-			struct VertexOutput
+			struct v2f 
 			{
 				float4 vertex : SV_POSITION;
-				fixed4 color : COLOR;
-				half2 texcoord : TEXCOORD0;
 			};
 
-			VertexOutput ComputeVertex(VertexInput vertexInput)
+			v2f vert (appdata_t v)
 			{
-				VertexOutput vertexOutput;
-
-				vertexOutput.vertex = UnityObjectToClipPos(vertexInput.vertex);
-				vertexOutput.texcoord = vertexInput.texcoord;
-				vertexOutput.color = vertexInput.color * _Color;
-
-				return vertexOutput;
+				v2f o;
+				o.vertex = UnityObjectToClipPos(v.vertex);
+				return o;
 			}
 
-			fixed4 Darken(fixed4 a, fixed4 b)
+			void frag (v2f i, inout fixed4 ocol : SV_Target)
 			{
-				fixed4 r = min(a, b);
-				r.a = b.a;
-				return r;
+				ocol = 1-ocol;
 			}
-
-			fixed4 ComputeFragment(VertexOutput vertexOutput
-			//#ifdef UNITY_FRAMEBUFFER_FETCH_AVAILABLE
-				, inout fixed4 fetchColor : COLOR1
-			//#endif
-			) : SV_Target
-			{
-				half4 color = tex2D(_MainTex, vertexOutput.texcoord) * vertexOutput.color;
-
-				//#ifdef UNITY_FRAMEBUFFER_FETCH_AVAILABLE
-						fixed4 grabColor = 1-fetchColor;
-				//#else
-				//		fixed4 grabColor = fixed4(1, 1, 0, 1); //fallback yellow
-				//#endif
-
-				return Darken(grabColor, color);
-			}
-
 			ENDCG
 		}
 	}
