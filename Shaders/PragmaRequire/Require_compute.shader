@@ -53,7 +53,7 @@
 		float4 wvertex = mul(unity_ObjectToWorld, float4(v.vertex.xyz,1));
 		o.emissionPower = 0;
 
-		#ifdef UNITY_COMPILER_HLSL
+		#ifdef UNITY_COMPILER_HLSL && !SHADER_API_VULKAN
 		float dist = abs(distance(myObjectBuffer[0].objPosition, wvertex.xyz));
 		float power = 1 - clamp(dist / _EmissionDistance, 0.0f, 1.0f);
 		o.emissionPower += power;
