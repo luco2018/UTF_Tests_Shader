@@ -34,10 +34,10 @@
 
 			float4 _MainTex_ST;
 
-			#if SHADER_API_D3D11
+			//#if SHADER_API_D3D11
 				TextureCube _MainTex;
 				SamplerState my_point_repeat_sampler;
-			#endif
+			//#endif
 
 			v2f vert (appdata v)
 			{
@@ -54,9 +54,9 @@
 				
 				float4 uv = fixed4(i.normal.xyz, 0);
 
-				#if SHADER_API_D3D11
+				//#if SHADER_API_D3D11
 					col = _MainTex.Sample(my_point_repeat_sampler, uv);
-				#endif
+				//#endif
 
 
 				return col;

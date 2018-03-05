@@ -17,7 +17,7 @@
 			#pragma target 3.0
 
 			//Surface shader doesn't recognise some of DX11 HLSL syntax
-			#if defined (UNITY_COMPILER_HLSL) && SHADER_API_D3D11
+			#if defined (UNITY_COMPILER_HLSL) //&& SHADER_API_D3D11
 				Texture2D _MainTex;
 				SamplerState my_point_repeat_sampler;
 			#else
@@ -37,7 +37,7 @@
 		{
 			fixed4 c = fixed4(0,0,1,1); //Fallback Color
 
-			#if defined (UNITY_COMPILER_HLSL) && SHADER_API_D3D11
+			#if defined (UNITY_COMPILER_HLSL) // && SHADER_API_D3D11
 				//c = _MainTex.Sample(my_point_clamp_sampler, IN.uv_MainTex);
 				SamplerState temp_sampler;
 				temp_sampler = my_point_repeat_sampler;

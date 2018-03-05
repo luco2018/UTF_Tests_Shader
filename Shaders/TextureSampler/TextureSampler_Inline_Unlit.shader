@@ -32,10 +32,10 @@
 
 			float4 _MainTex_ST;
 
-			#if SHADER_API_D3D11
+			//#if SHADER_API_D3D11
 				Texture2D _MainTex;
 				SamplerState my_point_repeat_sampler;
-			#endif
+			//#endif
 
 			v2f vert (appdata v)
 			{
@@ -50,9 +50,9 @@
 				fixed4 col = fixed4(1,0,0,1); //Fallback Color
 
 
-				#if SHADER_API_D3D11
+				//#if SHADER_API_D3D11
 					col = _MainTex.Sample(my_point_repeat_sampler, i.uv);
-				#endif
+				//#endif
 
 
 				return col;
