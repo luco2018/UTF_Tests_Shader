@@ -17,7 +17,7 @@
 		LOD 200
 		
 		CGPROGRAM
-		#pragma surface surf Standard fullforwardshadows
+		#pragma surface surf Unlit fullforwardshadows
 		#pragma target 3.0
 
 		sampler2D _MainTex2;
@@ -31,13 +31,21 @@
 			float2 uv4_MainTex4;
 		};
 
+         half4 LightingUnlit (SurfaceOutput s, half3 lightDir, half atten) 
+		 {
+           half4 c;
+           c.rgb = s.Albedo;
+           c.a = s.Alpha;
+           return c;
+         }
+
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color2;
 		fixed4 _Color3;
 		fixed4 _Color4;
 
-		void surf (Input IN, inout SurfaceOutputStandard o) 
+		void surf (Input IN, inout SurfaceOutput o) 
 		{
 			fixed4 c2 = tex2D(_MainTex2, IN.uv2_MainTex2) + _Color2;
 			fixed4 c3 = tex2D(_MainTex3, IN.uv3_MainTex3) + _Color3;
